@@ -5,16 +5,17 @@ pipeline{
     stages{
         stage("CLONE CODE"){
             steps{
-                
-                git 'https://github.com/hairavi10/game-of-life.git'
-                
+                 git 'https://github.com/hairavi10/game-of-life.git'
             }
-            steps{
-                
-                echo "Clone Complete"
-                
-            }
+            
         }
     }
-    
+        post{
+            success{
+                echo "========clone executed successfully ========"
+            }
+            failure{
+            echo "========clone execution failed========"
+            }
+        }
 }
