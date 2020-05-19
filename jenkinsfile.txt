@@ -10,14 +10,14 @@ pipeline {
         stage('Build Package'){
             steps{
                 sh 'mvn package'
-                stash name: 'gameoflife.war', includes: 'target/gameoflife.war'
+                stash name: 'gameoflife.war', includes: 'gameoflife-web/target/gameoflife.war'
             }            
         }
         stage('Deploy'){
             agent{ label "ANSIBLE" }
             steps{
                  dir('/home/ansible'){
-                      stash name: 'gameoflife.war', includes: 'target/gameoflife.war'                                
+                      stash name: 'gameoflife.war', includes: 'gameoflife-web/target/gameoflife.war'                                
                  }
             }
         }   
@@ -30,3 +30,5 @@ pipeline {
     }
 
 }
+
+    
