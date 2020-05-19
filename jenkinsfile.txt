@@ -9,30 +9,27 @@ pipeline {
         }
         stage('Build Package'){
             steps{
-                sh 'mvn package'
+                sh "mvn package"
+                stash name: 'tomcat.yml', includes: 'tomcat.yml'
                 stash name: 'gameoflife.war', includes: 'gameoflife-web/target/gameoflife.war'
             }            
         }
-        stage('Deploy'){
+        stage('Unstash war file'){
             agent{ label "ANSIBLE" }
             steps{
                 dir('/home/ansible'){
-                      unstash name: 'gameoflife.war'                              
-                }
-                sh ''' 
-                 wget https://github.com/hairavi10/game-of-life/blob/master/tomcat.yml
-                 ansible-playbook -i /home/ansible/inventory /home/ansible/tomcat.yml
-                 '''                         
+                      unstash name: 'tomcat.yml'  
+                      unstash name: 'gameoflife.war'                                             
+                }                             
+                                
             }
-        }   
-    }
-    post{
-        always{
-            archiveArtifacts artifacts: 'gameoflife-web/target/*.war', onlyIfSuccessful: true
         }
-        
+        stage('Deploy'){
+            agent{ label "ANSIBLE"}
+            steps{
+                sh "ansible-playbook -i /home/ansible/inventory /home/ansible/tomcat.yml"                  
+            }
+        } 
     }
-
 }
 
-    
