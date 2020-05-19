@@ -16,7 +16,7 @@
       loop: "{{ tomcat_packages }}"
     - name: Copy file with owner and permissions
       copy:
-        src: /home/ansible/gameoflife.war
+        src: /home/ansible/gameoflife-web/target/gameoflife.war
         dest: /var/lib/tomcat8/webapps/gameoflife.war               
     - name: restart tomcat8
       service:

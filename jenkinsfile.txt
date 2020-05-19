@@ -16,9 +16,13 @@ pipeline {
         stage('Deploy'){
             agent{ label "ANSIBLE" }
             steps{
-                 dir('/home/ansible'){
-                      stash name: 'gameoflife.war', includes: 'gameoflife-web/target/gameoflife.war'                                
-                 }
+                dir('/home/ansible'){
+                      unstash name: 'gameoflife.war'                              
+                }
+                sh ''' 
+                 wget https://github.com/hairavi10/game-of-life/blob/master/tomcat.yml
+                 ansible-playbook -i /home/ansible/inventory /home/ansible/tomcat.yml
+                 '''                         
             }
         }   
     }
