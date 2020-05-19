@@ -2,6 +2,9 @@ pipeline{
     agent{
         label "ANSIBLE"
     }
+    triggers{
+        pollSCM(* * * * *)
+    }
     stages{
         stage("CLONE CODE"){
             steps{
@@ -18,4 +21,21 @@ pipeline{
             echo "========clone execution failed========"
             }
         }
+
+        stage("Build"){
+            steps{
+                sh 'mvn package'
+            }
+            post{
+                success{
+                    echo "====++++ Build successfully++++===="
+                }
+                failure{
+                    echo "====++++ Build failed++++===="
+                }
+        
+            }
+        }
 }
+
+
