@@ -3,7 +3,7 @@ pipeline{
         label "ANSIBLE"
     }
     triggers{
-        pollSCM(* * * * *)
+        pollSCM('* * * * *')
     }
     stages{
         stage("CLONE CODE"){
