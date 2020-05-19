@@ -1,5 +1,5 @@
 pipeline { 
-    agent{ label "ANSIBLE" }
+    agent{ label "MASTER" }
     triggers{ pollSCM('* * * * *') }
     stages{
         stage ('Code Download From SCM'){
@@ -10,8 +10,17 @@ pipeline {
         stage('Build Package'){
             steps{
                 sh 'mvn package'
+                stash name: 'gameoflife.war', includes: 'target/gameoflife.war'
             }            
         }
+        stage('Deploy'){
+            agent{ label "ANSIBLE" }
+            steps{
+                 dir('/home/ansible'){
+                      stash name: 'gameoflife.war', includes: 'target/gameoflife.war'                                
+                 }
+            }
+        }   
     }
     post{
         always{
@@ -21,5 +30,3 @@ pipeline {
     }
 
 }
-
-    

@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  vars: 
+    tomcat_packages: 
+      - tomcat8
+      - tomcat8-docs 
+      - tomcat8-admin  
+      - tomcat8-examples
+  tasks:
+    - name: install tomcat pakages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes  
+        state: present
+      loop: "{{ tomcat_packages }}"
+    - name: Copy file with owner and permissions
+      copy:
+        src: /home/ansible/gameoflife.war
+        dest: /var/lib/tomcat8/webapps/gameoflife.war               
+    - name: restart tomcat8
+      service:
+        name: tomcat8
+        state: restarted
+        enabled: yes
