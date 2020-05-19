@@ -12,30 +12,22 @@ pipeline{
             }
             
         }
-    }
-        post{
-            success{
-                echo "========clone executed successfully ========"
-            }
-            failure{
-            echo "========clone execution failed========"
-            }
-        }
-
         stage("Build"){
             steps{
                 sh 'mvn package'
             }
-            post{
-                success{
-                    echo "====++++ Build successfully++++===="
-                }
-                failure{
-                    echo "====++++ Build failed++++===="
-                }
-        
-            }
         }
+    }
+        post{
+            success{
+                echo "====++++ Build successful++++===="
+            }
+            failure{
+                echo "====++++ Build failed++++===="
+            }
+        
+        }
+        
 }
 
 
